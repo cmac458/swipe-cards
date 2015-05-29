@@ -1,25 +1,24 @@
 {
-  "name": "ionic-ion-tinder-cards",
+  "name": "ionic-tri-dir-swipecards",
   "version": "1.0.0",
-  "codename": "lanthanum-leopard",
-  "homepage": "https://github.com/driftyco/ionic-contrib-tinder-cards",
+  "homepage": "https://github.com/cmac458/swipe-cards",
   "authors": [
-    "Max Lynch <max@drifty.com>"
+  "cmcguire"
   ],
-  "description": "A tinder-style card UI for Ionic apps",
+  "description": "A tinder-style card UI for Ionic apps that allows swiping left right or upwards",
   "main": [
-    "ionic.tdcards.css",
-    "ionic.tdcards.js"
+  "swipecards.css",
+  "swipecards.js"
   ],
   "keywords": [
-    "mobile",
-    "html5",
-    "ionic",
-    "cordova",
-    "phonegap",
-    "tinder",
-    "angularjs",
-    "angular"
+  "mobile",
+  "html5",
+  "ionic",
+  "cordova",
+  "phonegap",
+  "tinder",
+  "angularjs",
+  "angular"
   ],
   "license": "MIT",
   "private": false,
