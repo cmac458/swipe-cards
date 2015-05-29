@@ -21,9 +21,9 @@ angular.module('starter', ['ionic', 'ionic.contrib.ui.tinderCards'])
 
 .controller('CardsCtrl', function($scope, TDCardDelegate) {
   var cardTypes = [
-    { image: 'max.jpg' },
-    { image: 'ben.png' },
-    { image: 'perry.jpg' },
+  { image: 'dexter.jpg' },
+  { image: 'avengers.jpg' },
+  { image: 'modernfam.jpg' },
   ];
 
   $scope.cardDestroyed = function(index) {
@@ -38,15 +38,22 @@ angular.module('starter', ['ionic', 'ionic.contrib.ui.tinderCards'])
   
   $scope.cards = [];
   for(var i = 0; i < 3; i++) $scope.addCard();
-})
+
+    $scope.cardSwipedLeft = function(index) {
+      console.log('LEFT SWIPE');
+      $scope.addCard();
+    };
+    $scope.cardSwipedRight = function(index) {
+      console.log('RIGHT SWIPE');
+      $scope.addCard();
+    };
+
+    $scope.cardSwipedUp = function(index) {
+      console.log('Up SWIPE');
+      $scope.addCard();
+    };
+  })
 
 .controller('CardCtrl', function($scope, TDCardDelegate) {
-  $scope.cardSwipedLeft = function(index) {
-    console.log('LEFT SWIPE');
-    $scope.addCard();
-  };
-  $scope.cardSwipedRight = function(index) {
-    console.log('RIGHT SWIPE');
-    $scope.addCard();
-  };
+
 });

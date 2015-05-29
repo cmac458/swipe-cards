@@ -3,7 +3,7 @@
   // Get transform origin poly
   var d = document.createElement('div');
   var transformKeys = ['webkitTransformOrigin', 'transform-origin', '-webkit-transform-origin', 'webkit-transform-origin',
-              '-moz-transform-origin', 'moz-transform-origin', 'MozTransformOrigin', 'mozTransformOrigin'];
+  '-moz-transform-origin', 'moz-transform-origin', 'MozTransformOrigin', 'mozTransformOrigin'];
 
   var TRANSFORM_ORIGIN = 'webkitTransformOrigin';
   for(var i = 0; i < transformKeys.length; i++) {
@@ -14,7 +14,7 @@
   }
 
   var transitionKeys = ['webkitTransition', 'transition', '-webkit-transition', 'webkit-transition',
-              '-moz-transition', 'moz-transition', 'MozTransition', 'mozTransition'];
+  '-moz-transition', 'moz-transition', 'MozTransition', 'mozTransition'];
   var TRANSITION = 'webkitTransition';
   for(var i = 0; i < transitionKeys.length; i++) {
     if(d.style[transitionKeys[i]] !== undefined) {
@@ -27,7 +27,7 @@
     /**
      * Initialize a card with the given options.
      */
-    initialize: function(opts) {
+     initialize: function(opts) {
       opts = ionic.extend({
       }, opts);
 
@@ -35,7 +35,10 @@
 
       this.el = opts.el;
 
+      console.log(this.el.parentNode);
       this.parentWidth = this.el.parentNode.offsetWidth;
+      this.parentHeight = this.el.parentNode.offsetWidth;
+
       this.width = this.el.offsetWidth;
 
       this.startX = this.startY = this.x = this.y = 0;
@@ -46,7 +49,7 @@
     /**
      * Set the X position of the card.
      */
-    setX: function(x) {
+     setX: function(x) {
       this.el.style[ionic.CSS.TRANSFORM] = 'translate3d(' + x + 'px,' + this.y + 'px, 0)';
       this.x = x;
       this.startX = x;
@@ -55,7 +58,7 @@
     /**
      * Set the Y position of the card.
      */
-    setY: function(y) {
+     setY: function(y) {
       this.el.style[ionic.CSS.TRANSFORM] = 'translate3d(' + this.x + 'px,' + y + 'px, 0)';
       this.y = y;
       this.startY = y;
@@ -64,35 +67,35 @@
     /**
      * Set the Z-Index of the card
      */
-    setZIndex: function(index) {
+     setZIndex: function(index) {
       this.el.style.zIndex = index;
     },
 
     /**
      * Set the width of the card
      */
-    setWidth: function(width) {
+     setWidth: function(width) {
       this.el.style.width = width + 'px';
     },
 
     /**
      * Set the height of the card
      */
-    setHeight: function(height) {
+     setHeight: function(height) {
       this.el.style.height = height + 'px';
     },
 
     /**
      * Set the duration to run the pop-in animation
      */
-    setPopInDuration: function(duration) {
+     setPopInDuration: function(duration) {
       this.cardPopInDuration = duration;
     },
 
     /**
      * Transition in the card with the given animation class
      */
-    transitionIn: function(animationClass) {
+     transitionIn: function(animationClass) {
       var self = this;
 
       this.el.classList.add(animationClass + '-start');
@@ -106,32 +109,33 @@
     /**
      * Disable transitions on the card (for when dragging)
      */
-    disableTransition: function(animationClass) {
+     disableTransition: function(animationClass) {
       this.el.classList.remove(animationClass);
     },
 
     /**
      * Swipe a card out programtically
      */
-    swipe: function() {
+     swipe: function() {
       this.transitionOut();
     },
     
     /**
      * Snap the card back to its original position
      */
-    snapBack: function() {
+     snapBack: function() {
       this.onSnapBack(this.x, this.y, this.rotationAngle);
     },
 
     isUnderThreshold: function() {
       //return true;
-      return Math.abs(this.thresholdAmount) < 0.4;
+      return Math.abs(this.thresholdAmountX) < 0.4 && this.thresholdAmountY >= 0;
     },
+
     /**
      * Fly the card out or animate back into resting position.
      */
-    transitionOut: function(e) {
+     transitionOut: function(e) {
       var self = this;
 
       if(this.isUnderThreshold()) {
@@ -139,11 +143,11 @@
         return;
       }
 
-      self.onTransitionOut(self.thresholdAmount);
+      self.onTransitionOut(self.thresholdAmountX,self.thresholdAmountY);
       
       var angle = Math.atan(e.gesture.deltaX / e.gesture.deltaY);
 
-      var dir = this.thresholdAmount < 0 ? -1 : 1;
+      var dir = this.thresholdAmountX < 0 ? -1 : 1;
       var targetX;
       if(this.x > 0) {
         targetX = (this.parentWidth / 2) + (this.width);
@@ -157,12 +161,13 @@
       // Fly out
       var rotateTo = this.rotationAngle;//(this.rotationAngle this.rotationDirection * 0.2));// || (Math.random() * 0.4);
 
-      var duration = 0.3 - Math.min(Math.max(Math.abs(e.gesture.velocityX)/10, 0.05), 0.2);
-      
-      ionic.requestAnimationFrame(function() {
-        self.el.style.transform = self.el.style.webkitTransform = 'translate3d(' + targetX + 'px, ' + targetY + 'px,0) rotate(' + self.rotationAngle + 'rad)';
-        self.el.style.transition = self.el.style.webkitTransition = 'all ' + duration + 's ease-in-out';
-      });
+var duration = 0.3 - Math.min(Math.max(Math.abs(e.gesture.velocityX)/10, 0.05), 0.2);
+
+ionic.requestAnimationFrame(function() {
+  self.el.style.transform = self.el.style.webkitTransform = 'translate3d(' + targetX + 'px, ' + targetY + 'px,0) rotate(' + self.rotationAngle + 'rad)';
+  self.el.style.tra
+  nsition = self.el.style.webkitTransition = 'all ' + duration + 's ease-in-out';
+});
 
       //this.onSwipe && this.onSwipe();
 
@@ -175,7 +180,7 @@
     /**
      * Bind drag events on the card.
      */
-    bindEvents: function() {
+     bindEvents: function() {
       var self = this;
       ionic.onGesture('dragstart', function(e) {
         /*
@@ -217,51 +222,52 @@
       var point = window.innerWidth / 2 + this.rotationDirection * (width / 2)
       var distance = Math.abs(point - e.gesture.touches[0].pageX);// - window.innerWidth/2);
 
-      this.touchDistance = distance * 10;
-    },
+this.touchDistance = distance * 10;
+},
 
-    _doDrag: function(e) {
-      e.preventDefault();
+_doDrag: function(e) {
+  e.preventDefault();
 
-      var o = e.gesture.deltaX / -1000;
+  var o = e.gesture.deltaX / -1000;
 
-      this.rotationAngle = Math.atan(o);
+  this.rotationAngle = Math.atan(o);
 
-      this.x = this.startX + (e.gesture.deltaX * 0.8);
-      this.y = this.startY + (e.gesture.deltaY * 0.8);
+  this.x = this.startX + (e.gesture.deltaX * 0.8);
+  this.y = this.startY + (e.gesture.deltaY * 0.8);
 
-      this.el.style.transform = this.el.style.webkitTransform = 'translate3d(' + this.x + 'px, ' + this.y  + 'px, 0) rotate(' + (this.rotationAngle || 0) + 'rad)';
+  this.el.style.transform = this.el.style.webkitTransform = 'translate3d(' + this.x + 'px, ' + this.y  + 'px, 0) rotate(' + (this.rotationAngle || 0) + 'rad)';
 
 
-      this.thresholdAmount = (this.x / (this.parentWidth/2));
+  this.thresholdAmountX = (this.x / (this.parentWidth/2));
+  this.thresholdAmountY = (this.y / (this.parentHeight/2));
 
-      var self = this;
-      setTimeout(function() {
-        self.onPartialSwipe(self.thresholdAmount);
-      });
-    },
-    _doDragEnd: function(e) {
-      this.transitionOut(e);
-    }
+  var self = this;
+  setTimeout(function() {
+    self.onPartialSwipe(self.thresholdAmountX, self.thresholdAmountY);
   });
+},
+_doDragEnd: function(e) {
+  this.transitionOut(e);
+}
+});
 
 
-  angular.module('ionic.contrib.ui.tinderCards', ['ionic'])
+angular.module('ionic.contrib.ui.tinderCards', ['ionic'])
 
-  .directive('tdCard', ['$timeout', function($timeout) {
+.directive('tdCard', ['$timeout', function($timeout) {
     /**
      * A simple non-linear fade function for the text on each card
      */
-    var fadeFn = function(t) {
+     var fadeFn = function(t) {
       // Speed up time to ramp up quickly
       t = Math.min(1, t * 3);
 
       // This is a simple cubic bezier curve.
       // http://cubic-bezier.com/#.11,.67,.41,.99
       var c1 = 0.11,
-          c2 = 0.67,
-          c3 = 0.41,
-          c4 = 0.99;
+      c2 = 0.67,
+      c3 = 0.41,
+      c4 = 0.99;
 
       return Math.pow((1 - t), 3)*c1 + 3*Math.pow((1 -  t), 2)*t*c2 + 3*(1 - t)*t*t*c3 + Math.pow(t, 3)*c4;
     };
@@ -274,8 +280,10 @@
       scope: {
         onSwipeLeft: '&',
         onSwipeRight: '&',
+        onSwipeUp: '&',
         onTransitionLeft: '&',
         onTransitionRight: '&',
+        onTransitionUp: '&',
         onTransitionOut: '&',
         onPartialSwipe: '&',
         onSnapBack: '&',
@@ -324,17 +332,31 @@
                 $scope.onTransitionRight();
               });
             },
+            onTransitionUp: function() {
+              $timeout(function() {
+                $scope.onTransitionUp();
+              });
+            },
             onTransitionLeft: function() {
               $timeout(function() {
                 $scope.onTransitionLeft();
               });
             },
-            onTransitionOut: function(amt) {
-              if (amt < 0) {
+            onTransitionOut: function(amt,ypos) {
+
+              if (amt < -0.2) {
                 swipeableCard.onTransitionLeft();
-              } else {
+                return;
+              } 
+              if(amt > 0.2) {
                 swipeableCard.onTransitionRight();
+                return;
               }
+
+              if(ypos < 0.2){
+                swipeableCard.onTransitionUp();
+              }
+
               $timeout(function() {
                 $scope.onTransitionOut({amt: amt});
               });
@@ -380,76 +402,76 @@
               animateSpringViaCss(el, 0, 0.5, 50, 700, 10, function (x) {
                 return el.style.transform = el.style.webkitTransform = 'translate3d(' + x + 'px,0,0)';
               });
-              */
-            },
-          });
-          $scope.$parent.swipeCard = swipeableCard;
+*/
+},
+});
+$scope.$parent.swipeCard = swipeableCard;
 
-        }
-      }
-    }
-  }])
+}
+}
+}
+}])
 
-  .directive('tdCards', ['$rootScope', '$timeout', function($rootScope, $timeout) {
-    return {
-      restrict: 'E',
-      template: '<div class="td-cards" ng-transclude></div>',
-      transclude: true,
-      scope: {},
-      controller: ['$scope', '$element', function($scope, $element) {
-        var cards;
-        var firstCard, secondCard, thirdCard;
+.directive('tdCards', ['$rootScope', '$timeout', function($rootScope, $timeout) {
+  return {
+    restrict: 'E',
+    template: '<div class="td-cards" ng-transclude></div>',
+    transclude: true,
+    scope: {},
+    controller: ['$scope', '$element', function($scope, $element) {
+      var cards;
+      var firstCard, secondCard, thirdCard;
 
-        var existingCards, card;
+      var existingCards, card;
 
-        var i, j;
+      var i, j;
 
-        var sortCards = function() {
-          existingCards = $element[0].querySelectorAll('td-card');
+      var sortCards = function() {
+        existingCards = $element[0].querySelectorAll('td-card');
 
-          for(i = 0; i < existingCards.length; i++) {
-            card = existingCards[i];
-            if(!card) continue;
-            if(i > 0) {
-              card.style.transform = card.style.webkitTransform = 'translate3d(0, ' + (i * 4) + 'px, 0)';
-            }
-            card.style.zIndex = (existingCards.length - i);
+        for(i = 0; i < existingCards.length; i++) {
+          card = existingCards[i];
+          if(!card) continue;
+          if(i > 0) {
+            card.style.transform = card.style.webkitTransform = 'translate3d(0, ' + (i * 4) + 'px, 0)';
           }
-        };
+          card.style.zIndex = (existingCards.length - i);
+        }
+      };
 
-        $timeout(function() {
-          sortCards();
-        });
+      $timeout(function() {
+        sortCards();
+      });
 
-        var bringCardUp = function(card, amt, max) {
-          var position, newTop;
-          position = card.style.transform || card.style.webkitTransform;
-          newTop = Math.max(0, Math.min(max, max - (max * Math.abs(amt))));
-          card.style.transform = card.style.webkitTransform = 'translate3d(0, ' + newTop + 'px, 0)';
-        };
+      var bringCardUp = function(card, amt, max) {
+        var position, newTop;
+        position = card.style.transform || card.style.webkitTransform;
+        newTop = Math.max(0, Math.min(max, max - (max * Math.abs(amt))));
+        card.style.transform = card.style.webkitTransform = 'translate3d(0, ' + newTop + 'px, 0)';
+      };
 
-        this.partial = function(amt) {
-          cards = $element[0].querySelectorAll('td-card');
-          firstCard = cards[0];
-          secondCard = cards.length > 2 && cards[1];
-          thirdCard = cards.length > 3 && cards[2];
+      this.partial = function(amt) {
+        cards = $element[0].querySelectorAll('td-card');
+        firstCard = cards[0];
+        secondCard = cards.length > 2 && cards[1];
+        thirdCard = cards.length > 3 && cards[2];
 
-          secondCard && bringCardUp(secondCard, amt, 4);
-          thirdCard && bringCardUp(thirdCard, amt, 8);
-        };
-      }]
+        secondCard && bringCardUp(secondCard, amt, 4);
+        thirdCard && bringCardUp(thirdCard, amt, 8);
+      };
+    }]
+  }
+}])
+
+.factory('TDCardDelegate', ['$rootScope', function($rootScope) {
+  return {
+    popCard: function($scope, isAnimated) {
+      $rootScope.$emit('tdCard.pop', isAnimated);
+    },
+    getSwipeableCard: function($scope) {
+      return $scope.swipeCard;
     }
-  }])
-
-  .factory('TDCardDelegate', ['$rootScope', function($rootScope) {
-    return {
-      popCard: function($scope, isAnimated) {
-        $rootScope.$emit('tdCard.pop', isAnimated);
-      },
-      getSwipeableCard: function($scope) {
-        return $scope.swipeCard;
-      }
-    }
-  }]);
+  }
+}]);
 
 })(window.ionic);
